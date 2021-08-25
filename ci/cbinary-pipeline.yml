@@ -76,7 +76,7 @@ stages:
               dir 7zip
               echo "7zip installed"
               curl.exe --help
-              curl.exe -L -o x86_64-8.1.0-release-posix-seh-rt_v6-rev0.7z https://downloads.sourceforge.net/project/mingw-w64/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/8.1.0/threads-posix/seh/x86_64-8.1.0-release-posix-seh-rt_v6-rev0.7z?ts=gAAAAABhH5L3aq1EYuKRY1RqmT0rR83fNFE1xKMqadUXZ77T4jEUHJ1wSjgJlHGP6EZc1Yij6ApY27cdnzevh75Wtuq5dEu8tA%3D%3D&r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fmingw-w64%2Ffiles%2FToolchains%2520targetting%2520Win64%2FPersonal%2520Builds%2Fmingw-builds%2F8.1.0%2Fthreads-posix%2Fseh%2Fx86_64-8.1.0-release-posix-seh-rt_v6-rev0.7z%2Fdownload
+              curl.exe -L -o x86_64-8.1.0-release-posix-seh-rt_v6-rev0.7z https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/8.1.0/threads-posix/seh/x86_64-8.1.0-release-posix-seh-rt_v6-rev0.7z/download?use_mirror=kumisystems&r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fmingw-w64%2Ffiles%2FToolchains%2520targetting%2520Win64%2FPersonal%2520Builds%2Fmingw-builds%2F8.1.0%2Fthreads-posix%2Fseh%2Fx86_64-8.1.0-release-posix-seh-rt_v6-rev0.7z%2Fdownload
               curl.exe -L -o msys2-x86_64-latest.exe https://github.com/msys2/msys2-installer/releases/download/nightly-x86_64/msys2-x86_64-latest.exe
               type x86_64-8.1.0-release-posix-seh-rt_v6-rev0.7z
               7zip\7za.exe x x86_64-8.1.0-release-posix-seh-rt_v6-rev0.7z
