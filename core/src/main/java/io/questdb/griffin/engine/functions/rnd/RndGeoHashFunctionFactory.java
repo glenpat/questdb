@@ -53,52 +53,115 @@ public class RndGeoHashFunctionFactory implements FunctionFactory {
             CairoConfiguration configuration,
             SqlExecutionContext sqlExecutionContext
     ) throws SqlException {
-        int bits = args.getQuick(0).getInt(null);
-        if (bits < 1 || bits > GeoHashes.MAX_BITS_LENGTH) {
-            throw SqlException.$(argPositions.getQuick(0), "precision must be in [1..60] range");
+        final Function bitsArg = args.get(0);
+        if (bitsArg.isConstant() || bitsArg.isRuntimeConstant()) {
+            int bits = bitsArg.getInt(null);
+            if (bits < 1 || bits > GeoHashes.MAX_BITS_LENGTH) {
+                throw SqlException.$(argPositions.getQuick(0), "precision must be in [1..60] range");
+            }
+            return new RndConstFunction(bits);
+        } else {
+            return new RndFunction(bitsArg);
         }
-        return new RndFunction(bits);
     }
 
-    private static class RndFunction extends GeoHashFunction implements Function {
+    private static int getBits(Function bitsArg, Record rec) {
+        int bits = bitsArg.getInt(rec);
+        if (bits < 1 || bits > GeoHashes.MAX_BITS_LENGTH) {
+            return GeoHashes.MAX_BITS_LENGTH;
+        }
+        return bits;
+    }
+
+    private static long getGeoHashLongRnd(Rnd rnd, int bits) {
+        double x = rnd.nextDouble() * 180.0 - 90.0;
+        double y = rnd.nextDouble() * 360.0 - 180.0;
+        try {
+            return GeoHashes.fromCoordinates(x, y, bits);
+        } catch (NumericException e) {
+            // Should never happen
+            return GeoHashes.NULL;
+        }
+    }
+
+    private static class RndConstFunction extends GeoHashFunction implements Function {
 
         private final int bits;
         private Rnd rnd;
 
-        public RndFunction(int bits) {
+        public RndConstFunction(int bits) {
             super(ColumnType.geohashWithPrecision(bits));
             this.bits = bits;
         }
 
-        private long getLongRnd() {
-            double x = rnd.nextDouble() * 180.0 - 90.0;
-            double y = rnd.nextDouble() * 360.0 - 180.0;
-            try {
-                return GeoHashes.fromCoordinates(x, y, this.bits);
-            } catch (NumericException e) {
-                // Should never happen
-                return GeoHashes.NULL;
-            }
+        @Override
+        public boolean isConstant() {
+            return false;
+        }
+
+        @Override
+        public boolean isRuntimeConstant() {
+            return true;
         }
 
         @Override
         public byte getGeoHashByte(Record rec) {
-            return (byte) getLongRnd();
+            return (byte) getGeoHashLongRnd(this.rnd, this.bits);
         }
 
         @Override
         public short getGeoHashShort(Record rec) {
-            return (short) getLongRnd();
+            return (short) getGeoHashLongRnd(this.rnd, this.bits);
         }
 
         @Override
         public int getGeoHashInt(Record rec) {
-            return (int) getLongRnd();
+            return (int) getGeoHashLongRnd(this.rnd, this.bits);
         }
 
         @Override
         public long getGeoHashLong(Record rec) {
-            return getLongRnd();
+            return getGeoHashLongRnd(this.rnd, this.bits);
+        }
+
+        @Override
+        public void init(SymbolTableSource symbolTableSource, SqlExecutionContext executionContext) {
+            this.rnd = executionContext.getRandom();
+        }
+    }
+
+    private static class RndFunction extends GeoHashFunction implements Function {
+
+        private final Function bits;
+        private Rnd rnd;
+
+        public RndFunction(Function bits) {
+            super(GeoHashes.MAX_BITS_LENGTH); // max valid precision
+            this.bits = bits;
+        }
+
+        @Override
+        public byte getGeoHashByte(Record rec) {
+            final int bits = getBits(this.bits, rec);
+            return (byte) getGeoHashLongRnd(this.rnd, bits);
+        }
+
+        @Override
+        public short getGeoHashShort(Record rec) {
+            final int bits = getBits(this.bits, rec);
+            return (short) getGeoHashLongRnd(this.rnd, bits);
+        }
+
+        @Override
+        public int getGeoHashInt(Record rec) {
+            final int bits = getBits(this.bits, rec);
+            return (int) getGeoHashLongRnd(this.rnd, bits);
+        }
+
+        @Override
+        public long getGeoHashLong(Record rec) {
+            final int bits = getBits(this.bits, rec);
+            return getGeoHashLongRnd(this.rnd, bits);
         }
 
         @Override
