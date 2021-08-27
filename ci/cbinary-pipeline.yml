@@ -86,11 +86,16 @@ stages:
                 echo "testing mingw64"
                 msys64\msys2_shell.cmd -mingw64
                 
+                
+
 
                 curl.exe -L -o nasm-2.15.05.zip  https://www.nasm.us/pub/nasm/releasebuilds/2.15.05/win64/nasm-2.15.05-win64.zip
                 tar -xf nasm-2.15.05.zip
                 Write-Host "##vso[task.prependpath]$(Build.SourcesDirectory)\nasm-2.15.05\nasm.exe;$(Build.SourcesDirectory)\msys64"
                 
+                Write-Host "nasm version"
+                nasm-2.15.05\nasm.exe --version
+                msys64\msys2_shell.cmd -mingw64       
 
             displayName: "Install CygWin and NASM Windows"
             condition: eq(variables['Agent.OS'], 'Windows_NT')
