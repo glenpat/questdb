@@ -77,19 +77,17 @@ stages:
                 mkdir 7zip
                 tar -xf 7za920.zip -C 7zip
                 Write-Host "7zip installed"
-          
+
                 curl.exe -L -o msys2-base-x86_64-latest.tar.xz https://github.com/msys2/msys2-installer/releases/download/nightly-x86_64/msys2-base-x86_64-latest.tar.xz
                 Write-Host "mys2 downloaded"
                 7zip\7za.exe x msys2-base-x86_64-latest.tar.xz
                 7zip\7za.exe x msys2-base-x86_64-latest.tar > NULL
-                dir $(Build.SourcesDirectory)\msys64
-                Write-Host "mys2 extracted"
-                Write-Host "%AGENT_BUILDSOURCESDIRECTORY%"
-                Write-Host "$(Build.SourcesDirectory)"
-                Write-Host "---"
-
-                Write-Host "setting path"
                 Write-Host "##vso[task.prependpath]$(Build.SourcesDirectory)\msys64"
+
+                curl.exe -L -o nasm.zip  https://www.nasm.us/pub/nasm/releasebuilds/2.15.05/win64/nasm-2.15.05-win64.zip
+                tar -xf nasm.zip -C nasm
+                Write-Host "##vso[task.prependpath]$(Build.SourcesDirectory)\nasm"
+
             displayName: "Install CygWin Windows"
             condition: eq(variables['Agent.OS'], 'Windows_NT')
           - task: PowerShell@2
