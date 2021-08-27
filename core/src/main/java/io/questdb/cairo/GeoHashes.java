@@ -154,34 +154,43 @@ public class GeoHashes {
         return fromString(hash, hash.length());
     }
 
-    public static void fromStringToBits(final CharSequenceHashSet prefixes, int columnType, final DirectLongList prefixesBits) {
+    public static void fromStringToBits(final CharSequenceHashSet prefixes, int columnType, final LongList prefixesBits) {
         prefixesBits.clear();
-        final int columnSize = ColumnType.sizeOf(columnType);
-        final int columnBits = GeoHashes.getBitsPrecision(columnType);
         for (int i = 0, sz = prefixes.size(); i < sz; i++) {
             try {
                 final CharSequence prefix = prefixes.get(i);
-                final long hash = fromStringNl(prefix);
-                if (hash == NULL) {
-                    continue;
-                }
-                final int bits = 5 * prefix.length();
-                final int shift = columnBits - bits;
-                long norm = hash << shift;
-                long mask = bitmask(bits, shift);
-                mask |= 1L << (columnSize * 8 - 1); // set the most significant bit to ignore null from prefix matching
-                // if the prefix is more precise than hashes,
-                // exclude it from matching
-                if(bits > columnBits) {
-                    norm = 0L;
-                    mask = -1L;
-                }
-                prefixesBits.add(norm);
-                prefixesBits.add(mask);
+                addNormalizedGeoPrefix(prefix, columnType, prefixesBits);
             } catch (NumericException e) {
                 // Skip invalid geo hashes
             }
         }
+    }
+
+    public static void addNormalizedGeoPrefix(CharSequence hashToken, int columnType, final LongList prefixes) throws NumericException {
+        if(hashToken == null) {
+            throw NumericException.INSTANCE;
+        }
+        final long hash = GeoHashes.fromString(hashToken, hashToken.length());
+        final int prefixType = ColumnType.geohashWithPrecision(5 * hashToken.length()); //TODO: geohash literals
+        addNormalizedGeoPrefix(hash, prefixType, columnType, prefixes);
+    }
+
+    public static void addNormalizedGeoPrefix(long hash, int prefixType, int columnType, final LongList prefixes) throws NumericException {
+        final int bits = GeoHashes.getBitsPrecision(prefixType);
+        final int columnSize = ColumnType.sizeOf(columnType);
+        final int columnBits = GeoHashes.getBitsPrecision(columnType);
+
+        if (hash == NULL || bits > columnBits) {
+            throw NumericException.INSTANCE;
+        }
+
+        final int shift = columnBits - bits;
+        long norm = hash << shift;
+        long mask = GeoHashes.bitmask(bits, shift);
+        mask |= 1L << (columnSize * 8 - 1); // set the most significant bit to ignore null from prefix matching
+
+        prefixes.add(norm);
+        prefixes.add(mask);
     }
 
     public static int hashSize(long hashz) {
