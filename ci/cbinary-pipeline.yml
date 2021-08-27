@@ -116,10 +116,11 @@ stages:
               echo "##vso[task.prependpath]$(pwd)\nasm"
             displayName: "Install NASM Mac"
             condition: eq(variables['Agent.OS'], 'Darwin')
+          
           - task: CMake@1
             inputs:
               workingDirectory: core
-              cmakeArgs: -DCMAKE_BUILD_TYPE=Debug -DCMAKE_DEPENDS_USE_COMPILER=FALSE -G "CodeBlocks - Unix Makefiles"
+              cmakeArgs: -DCMAKE_DEPENDS_USE_COMPILER=FALSE -G ”NMake Makefiles”
           - task: CMake@1
             inputs:
               workingDirectory: core
