@@ -70,27 +70,26 @@ stages:
             displayName: "Install NASM Linux"
             condition: eq(variables['Agent.OS'], 'Linux')
           - task: CmdLine@2
-              displayName: 'Install Nuke'
-              inputs:
-                script: |
-                  curl.exe -o 7za920.zip https://www.7-zip.org/a/7za920.zip
-                  mkdir 7zip
-                  tar -xf 7za920.zip -C 7zip
-                  echo "7zip installed"
-            
-                  curl.exe -L -o msys2-base-x86_64-latest.tar.xz https://github.com/msys2/msys2-installer/releases/download/nightly-x86_64/msys2-base-x86_64-latest.tar.xz
-                  echo "mys2 downloaded"
-                  7zip\7za.exe x msys2-base-x86_64-latest.tar.xz
-                  7zip\7za.exe x msys2-base-x86_64-latest.tar > NULL
-                  dir $(Build.SourcesDirectory)\msys64
-                  echo "mys2 extracted"
-                  echo "%AGENT_BUILDSOURCESDIRECTORY%"
-                  echo "$(Build.SourcesDirectory)"
-                  echo "---"
+            inputs:
+              script: |
+                curl.exe -o 7za920.zip https://www.7-zip.org/a/7za920.zip
+                mkdir 7zip
+                tar -xf 7za920.zip -C 7zip
+                echo "7zip installed"
+          
+                curl.exe -L -o msys2-base-x86_64-latest.tar.xz https://github.com/msys2/msys2-installer/releases/download/nightly-x86_64/msys2-base-x86_64-latest.tar.xz
+                echo "mys2 downloaded"
+                7zip\7za.exe x msys2-base-x86_64-latest.tar.xz
+                7zip\7za.exe x msys2-base-x86_64-latest.tar > NULL
+                dir $(Build.SourcesDirectory)\msys64
+                echo "mys2 extracted"
+                echo "%AGENT_BUILDSOURCESDIRECTORY%"
+                echo "$(Build.SourcesDirectory)"
+                echo "---"
 
-                  echo "setting path"
-                  echo "##vso[task.prependpath]$(Build.SourcesDirectory)\msys64"
-                  path
+                echo "setting path"
+                echo "##vso[task.prependpath]$(Build.SourcesDirectory)\msys64"
+                path
             displayName: "Install CygWin Windows"
             condition: eq(variables['Agent.OS'], 'Windows_NT')
           - bash: |
