@@ -82,12 +82,13 @@ stages:
                 Write-Host "mys2 downloaded"
                 7zip\7za.exe x msys2-base-x86_64-latest.tar.xz
                 7zip\7za.exe x msys2-base-x86_64-latest.tar > NULL
+                Get-ChildItem msys64
                 Write-Host "##vso[task.prependpath]$(Build.SourcesDirectory)\msys64"
 
                 mkdir nasm
                 curl.exe -L -o nasm.zip  https://www.nasm.us/pub/nasm/releasebuilds/2.15.05/win64/nasm-2.15.05-win64.zip
                 tar -xf nasm.zip -C nasm
-                dir nasm
+                Get-ChildItem nasm
                 Write-Host "##vso[task.prependpath]$(Build.SourcesDirectory)\nasm"
                 Write-Host "##vso[task.setvariable variable=ASM_NASM]$(Build.SourcesDirectory)\nasm";
 
