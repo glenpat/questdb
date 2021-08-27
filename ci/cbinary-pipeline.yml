@@ -82,11 +82,11 @@ stages:
               dir
               echo "mys2 extracted"
               
-              echo "%AGENT_BUILDDIRECTORY%"
-              cd 
+              echo "%AGENT_BUILDSOURCESDIRECTORY%"
+              env
 
               echo "setting path"
-              echo "##vso[task.prependpath]D:\a\1\s\msys64"
+              ECHO ##vso[task.prependpath]$(Build.SourcesDirectory)\msys64
               dir D:\a\1\s\msys64
               path
             displayName: "Install CygWin Windows"
