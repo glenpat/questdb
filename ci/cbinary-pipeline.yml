@@ -85,12 +85,11 @@ stages:
                 Get-ChildItem msys64
                 Write-Host "##vso[task.prependpath]$(Build.SourcesDirectory)\msys64"
 
-                mkdir nasm
-                curl.exe -L -o nasm.zip  https://www.nasm.us/pub/nasm/releasebuilds/2.15.05/win64/nasm-2.15.05-win64.zip
-                tar -xf nasm.zip -C nasm
+                curl.exe -L -o nasm-2.15.05.zip  https://www.nasm.us/pub/nasm/releasebuilds/2.15.05/win64/nasm-2.15.05-win64.zip
+                tar -xf nasm-2.15.05.zip
                 Get-ChildItem nasm
-                Write-Host "##vso[task.prependpath]$(Build.SourcesDirectory)\nasm"
-                Write-Host "##vso[task.setvariable variable=ASM_NASM]$(Build.SourcesDirectory)\nasm";
+                Write-Host "##vso[task.prependpath]$(Build.SourcesDirectory)\nasm-2.15.05"
+                Write-Host "##vso[task.setvariable variable=ASM_NASM]$(Build.SourcesDirectory)\nasm-2.15.05";
 
             displayName: "Install CygWin and NASM Windows"
             condition: eq(variables['Agent.OS'], 'Windows_NT')
