@@ -78,16 +78,15 @@ stages:
               curl.exe -L -o msys2-base-x86_64-latest.tar.xz https://github.com/msys2/msys2-installer/releases/download/nightly-x86_64/msys2-base-x86_64-latest.tar.xz
               echo "mys2 downloaded"
               7zip\7za.exe x msys2-base-x86_64-latest.tar.xz
-              7zip\7za.exe x msys2-base-x86_64-latest.tar 
-              dir
+              7zip\7za.exe x msys2-base-x86_64-latest.tar > NULL
+              dir $(Build.SourcesDirectory)\msys64
               echo "mys2 extracted"
               
               echo "%AGENT_BUILDSOURCESDIRECTORY%"
               env
 
               echo "setting path"
-              @echo ##vso[task.prependpath]$(Build.SourcesDirectory)\msys64
-              path
+              echo "##vso[task.prependpath]%AGENT_BUILDSOURCESDIRECTORY%\msys64\"
             displayName: "Install CygWin Windows"
             condition: eq(variables['Agent.OS'], 'Windows_NT')
           - bash: |
