@@ -61,16 +61,8 @@ public class RndGeoHashFunctionFactory implements FunctionFactory {
             }
             return new RndConstFunction(bits);
         } else {
-            return new RndFunction(bitsArg);
+            throw SqlException.$(argPositions.getQuick(0), "argument must be const expression");
         }
-    }
-
-    private static int getBits(Function bitsArg, Record rec) {
-        int bits = bitsArg.getInt(rec);
-        if (bits < 1 || bits > GeoHashes.MAX_BITS_LENGTH) {
-            return GeoHashes.MAX_BITS_LENGTH;
-        }
-        return bits;
     }
 
     private static long getGeoHashLongRnd(Rnd rnd, int bits) {
@@ -122,46 +114,6 @@ public class RndGeoHashFunctionFactory implements FunctionFactory {
         @Override
         public long getGeoHashLong(Record rec) {
             return getGeoHashLongRnd(this.rnd, this.bits);
-        }
-
-        @Override
-        public void init(SymbolTableSource symbolTableSource, SqlExecutionContext executionContext) {
-            this.rnd = executionContext.getRandom();
-        }
-    }
-
-    private static class RndFunction extends GeoHashFunction implements Function {
-
-        private final Function bits;
-        private Rnd rnd;
-
-        public RndFunction(Function bits) {
-            super(GeoHashes.MAX_BITS_LENGTH); // max valid precision
-            this.bits = bits;
-        }
-
-        @Override
-        public byte getGeoHashByte(Record rec) {
-            final int bits = getBits(this.bits, rec);
-            return (byte) getGeoHashLongRnd(this.rnd, bits);
-        }
-
-        @Override
-        public short getGeoHashShort(Record rec) {
-            final int bits = getBits(this.bits, rec);
-            return (short) getGeoHashLongRnd(this.rnd, bits);
-        }
-
-        @Override
-        public int getGeoHashInt(Record rec) {
-            final int bits = getBits(this.bits, rec);
-            return (int) getGeoHashLongRnd(this.rnd, bits);
-        }
-
-        @Override
-        public long getGeoHashLong(Record rec) {
-            final int bits = getBits(this.bits, rec);
-            return getGeoHashLongRnd(this.rnd, bits);
         }
 
         @Override
