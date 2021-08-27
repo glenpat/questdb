@@ -82,8 +82,10 @@ stages:
                 Write-Host "mys2 downloaded"
                 7zip\7za.exe x msys2-base-x86_64-latest.tar.xz
                 7zip\7za.exe x msys2-base-x86_64-latest.tar > NULL
+                
+                echo "testing mingw64"
                 msys64\msys2_shell.cmd -mingw64
-                Get-ChildItem msys64
+                
 
                 curl.exe -L -o nasm-2.15.05.zip  https://www.nasm.us/pub/nasm/releasebuilds/2.15.05/win64/nasm-2.15.05-win64.zip
                 tar -xf nasm-2.15.05.zip
