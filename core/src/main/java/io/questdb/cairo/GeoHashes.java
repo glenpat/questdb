@@ -174,7 +174,7 @@ public class GeoHashes {
     }
 
     public static long fromString(CharSequence hash, int start, int parseLen) throws NumericException {
-        if (start < 0 || parseLen < 0 || parseLen - start > MAX_STRING_LENGTH || (hash != null && hash.length() != 0 && start + parseLen > hash.length())) {
+        if (start < 0 || parseLen < 0 || parseLen - start > MAX_STRING_LENGTH || (hash != null && hash.length() != 0 && parseLen - start > hash.length())) {
             throw NumericException.INSTANCE;
         }
         if (hash == null || parseLen == 0) {
