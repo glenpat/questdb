@@ -73,33 +73,19 @@ stages:
             inputs:
               targetType: 'inline'
               script: |
-                curl.exe -o 7za920.zip https://www.7-zip.org/a/7za920.zip
-                mkdir 7zip
-                tar -xf 7za920.zip -C 7zip
-                Write-Host "7zip installed"
-
-                curl.exe -L -o msys2-base-x86_64-latest.tar.xz https://github.com/msys2/msys2-installer/releases/download/nightly-x86_64/msys2-base-x86_64-latest.tar.xz
-                Write-Host "mys2 downloaded"
-                7zip\7za.exe x msys2-base-x86_64-latest.tar.xz
-                7zip\7za.exe x msys2-base-x86_64-latest.tar > NULL
                 
-                echo "testing mingw64"
-                msys64\msys2_shell.cmd -mingw64
-                
-                
-
+                choco install -y msys2 --no-progress --params="/InstallDir:$env:c:/msys64 /NoUpdate /NoPath"
+            
 
                 curl.exe -L -o nasm-2.15.05.zip  https://www.nasm.us/pub/nasm/releasebuilds/2.15.05/win64/nasm-2.15.05-win64.zip
                 tar -xf nasm-2.15.05.zip
-                Write-Host "##vso[task.prependpath]$(Build.SourcesDirectory)\nasm-2.15.05\nasm.exe;$(Build.SourcesDirectory)\msys64"
+                
                 
                 mkdir "C:\Program Files\nasm"
                 cp nasm-2.15.05\nasm.exe "C:\Program Files\nasm\nasm.exe"
 
                 Invoke-BatchFile "${env:ProgramFiles(x86)}\Microsoft Visual Studio\2019\Enterprise\VC\vcvarsall.bat" x64
               
-                
-
 
             displayName: "Install CygWin and NASM Windows"
             condition: eq(variables['Agent.OS'], 'Windows_NT')
