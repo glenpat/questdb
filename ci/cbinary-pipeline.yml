@@ -90,6 +90,7 @@ stages:
 
                 Write-Host "setting path"
                 Write-Host "##vso[task.prependpath]$(Build.SourcesDirectory)\msys64"
+                Write-Host "##vso[task.setvariable variable=PATH;]${env:PATH};$(Build.SourcesDirectory)\msys64";
                 $Env:Path
             displayName: "Install CygWin Windows"
             condition: eq(variables['Agent.OS'], 'Windows_NT')
