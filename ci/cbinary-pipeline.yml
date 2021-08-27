@@ -76,6 +76,7 @@ stages:
                 
                 choco install -y msys2 --no-progress --params="/InstallDir:$env:c:/msys64 /NoUpdate /NoPath"
             
+                Write-Host "##vso[task.prependpath]c:\msys64\mingw64\bin"
 
                 curl.exe -L -o nasm-2.15.05.zip  https://www.nasm.us/pub/nasm/releasebuilds/2.15.05/win64/nasm-2.15.05-win64.zip
                 tar -xf nasm-2.15.05.zip
@@ -84,7 +85,6 @@ stages:
                 mkdir "C:\Program Files\nasm"
                 cp nasm-2.15.05\nasm.exe "C:\Program Files\nasm\nasm.exe"
 
-                Invoke-BatchFile "${env:ProgramFiles(x86)}\Microsoft Visual Studio\2019\Enterprise\VC\vcvarsall.bat" x64
               
 
             displayName: "Install CygWin and NASM Windows"
