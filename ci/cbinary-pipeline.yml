@@ -93,7 +93,11 @@ stages:
                 tar -xf nasm-2.15.05.zip
                 Write-Host "##vso[task.prependpath]$(Build.SourcesDirectory)\nasm-2.15.05\nasm.exe;$(Build.SourcesDirectory)\msys64"
                 
-                msys64\msys2_shell.cmd -defterm -mingw64 -no-start -full-path -here -c 'cd core; cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_DEPENDS_USE_COMPILER=FALSE -G "CodeBlocks - Unix Makefiles"'
+                mkdir "C:\Program Files\nasm"
+                cp nasm-2.15.05\nasm.exe "C:\Program Files\nasm\nasm.exe"
+                Write-Host "nasm version"
+                nasm-2.15.05\nasm.exe --version
+                
 
 
             displayName: "Install CygWin and NASM Windows"
