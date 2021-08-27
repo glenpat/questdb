@@ -119,7 +119,7 @@ stages:
           - task: CMake@1
             inputs:
               workingDirectory: core
-              cmakeArgs: -DCMAKE_DEPENDS_USE_COMPILER=FALSE -G ”Make Makefiles”
+              cmakeArgs: -DCMAKE_DEPENDS_USE_COMPILER=FALSE -G "NMake Makefiles"
           - task: CMake@1
             inputs:
               workingDirectory: core
