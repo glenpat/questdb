@@ -81,12 +81,12 @@ stages:
               7zip\7za.exe x msys2-base-x86_64-latest.tar > NULL
               dir $(Build.SourcesDirectory)\msys64
               echo "mys2 extracted"
-              
               echo "%AGENT_BUILDSOURCESDIRECTORY%"
-              env
+              echo "$(Build.SourcesDirectory)"
+              echo "---"
 
               echo "setting path"
-              echo "##vso[task.prependpath]%AGENT_BUILDSOURCESDIRECTORY%\msys64\"
+              echo "##vso[task.prependpath]$(Build.SourcesDirectory)\msys64\"
             displayName: "Install CygWin Windows"
             condition: eq(variables['Agent.OS'], 'Windows_NT')
           - bash: |
