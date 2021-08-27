@@ -70,13 +70,10 @@ stages:
             displayName: "Install NASM Linux"
             condition: eq(variables['Agent.OS'], 'Linux')
           - script: |
-              curl.exe -o 7za920.zip https://www.7-zip.org/a/7za920.zip
-              mkdir 7zip
-              tar -xf 7za920.zip -C 7zip
-              echo "7zip installed"
-        
               curl.exe -L -o msys2-base-x86_64-latest.tar.xz https://github.com/msys2/msys2-installer/releases/download/nightly-x86_64/msys2-base-x86_64-latest.tar.xz
+              echo "mys2 downloaded"
               tar -xvf msys2-base-x86_64-latest.tar.xz
+              echo "mys2 extracted"
               dir
 
               echo "##vso[task.prependpath]%AGENT_BUILDDIRECTORY%\mingw\bin"
