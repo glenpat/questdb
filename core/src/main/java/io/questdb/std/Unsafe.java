@@ -39,8 +39,8 @@ public final class Unsafe {
     private static final AtomicLong MALLOC_COUNT = new AtomicLong(0);
     private static final AtomicLong FREE_COUNT = new AtomicLong(0);
     //#if jdk.version!=8
-    private static final long OVERRIDE;
-    private static final Method implAddExports;
+//    private static final long OVERRIDE;
+//    private static final Method implAddExports;
     //#endif
 
     static {
@@ -55,14 +55,14 @@ public final class Unsafe {
             LONG_OFFSET = Unsafe.getUnsafe().arrayBaseOffset(long[].class);
             LONG_SCALE = msb(Unsafe.getUnsafe().arrayIndexScale(long[].class));
             //#if jdk.version!=8
-            OVERRIDE = AccessibleObject_override_fieldOffset();
-            implAddExports = Module.class.getDeclaredMethod("implAddExports", String.class, Module.class);
+//            OVERRIDE = AccessibleObject_override_fieldOffset();
+//            implAddExports = Module.class.getDeclaredMethod("implAddExports", String.class, Module.class);
             //#endif
         } catch (ReflectiveOperationException e) {
             throw new ExceptionInInitializerError(e);
         }
         //#if jdk.version!=8
-        makeAccessible(implAddExports);
+//        makeAccessible(implAddExports);
         //#endif
     }
 
@@ -202,24 +202,24 @@ public final class Unsafe {
     }
 
     //#if jdk.version!=8
-    /**
-     * Equivalent to {@link AccessibleObject#setAccessible(boolean) AccessibleObject.setAccessible(true)}, except that
-     * it does not produce an illegal access error or warning.
-     *
-     * @param accessibleObject the instance to make accessible
-     */
-    public static void makeAccessible(AccessibleObject accessibleObject) {
-        UNSAFE.putBooleanVolatile(accessibleObject, OVERRIDE, true);
-    }
-
-    public static void addExports(Module from, Module to, String packageName) {
-        try {
-            implAddExports.invoke(from, packageName, to);
-        } catch (ReflectiveOperationException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static final Module JAVA_BASE_MODULE = System.class.getModule();
+//    /**
+//     * Equivalent to {@link AccessibleObject#setAccessible(boolean) AccessibleObject.setAccessible(true)}, except that
+//     * it does not produce an illegal access error or warning.
+//     *
+//     * @param accessibleObject the instance to make accessible
+//     */
+//    public static void makeAccessible(AccessibleObject accessibleObject) {
+//        UNSAFE.putBooleanVolatile(accessibleObject, OVERRIDE, true);
+//    }
+//
+//    public static void addExports(Module from, Module to, String packageName) {
+//        try {
+//            implAddExports.invoke(from, packageName, to);
+//        } catch (ReflectiveOperationException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    public static final Module JAVA_BASE_MODULE = System.class.getModule();
     //#endif
 }

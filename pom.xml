@@ -46,6 +46,6 @@
     </build>
     <modules>
         <module>core</module>
-        <module>benchmarks</module>
+<!--        <module>benchmarks</module>-->
     </modules>
 </project>
